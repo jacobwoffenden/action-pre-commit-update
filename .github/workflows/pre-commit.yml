@@ -88,7 +88,13 @@ jobs:
         run: |
           previousPullRequest=$(gh pr list --app "github-actions" --state open --search "🤖 pre-commit version update" --json "number" | jq -r '.[].number')
           export previousPullRequest
-          echo "previousPullRequest: ${previousPullRequest}"
+
+          if [[ -z "${previousPullRequest}" ]]; then
+            echo "No previous pull request found"
+          else
+            echo "Found previous pull request: ${previousPullRequest}"
+            echo "previousPullRequest=${previousPullRequest}" >>"${GITHUB_ENV}"
+          fi
 
       # - name: Create pull request
       #   if: env.changed == 'true'
@@ -102,3 +108,11 @@ jobs:
       #       --body "This pull request updates the pre-commit configuration to the latest available versions." \
       #       --head "${BRANCH_NAME}" \
       #       --base "main"
+
+      - name: Close previous pull request
+        if: env.changed == 'true' && env.previousPullRequest != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PREVIOUS_PULL_REQUEST: ${{ env.previousPullRequest }}
+        run: |
+          gh pr close "${PREVIOUS_PULL_REQUEST}" --delete-branch
