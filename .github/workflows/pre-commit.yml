@@ -1,0 +1,42 @@
+---
+name: pre-commit
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  pre-commit:
+    name: pre-commit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Harden Runner
+        id: harden_runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Set Up UV
+        id: setup_uv
+        uses: astral-sh/setup-uv@e92bafb6253dcd438e0484186d7669ea7a8ca1cc # v6.4.3
+        with:
+          activate-environment: true
+
+      - name: Install development dependencies
+        id: install_deps
+        run: |
+          uv sync --locked --dev
+
+      - name: Test pre-commit install
+        id: test_pre_commit_install
+        run: |
+          pre-commit --version
