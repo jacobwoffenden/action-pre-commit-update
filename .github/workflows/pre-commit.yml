@@ -26,16 +26,16 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up UV
+      - name: Set up uv
         id: setup_uv
         uses: astral-sh/setup-uv@e92bafb6253dcd438e0484186d7669ea7a8ca1cc # v6.4.3
         with:
           activate-environment: true
 
-      - name: Install development dependencies
+      - name: Install pre-commit
         id: install_deps
         run: |
-          uv sync --locked --dev
+          uv pip install pre-commit
 
       - name: Update pre-commit
         id: update_pre_commit
