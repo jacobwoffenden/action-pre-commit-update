@@ -25,7 +25,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set Up UV
+      - name: Set up UV
         id: setup_uv
         uses: astral-sh/setup-uv@e92bafb6253dcd438e0484186d7669ea7a8ca1cc # v6.4.3
         with:
@@ -36,12 +36,18 @@ jobs:
         run: |
           uv sync --locked --dev
 
-      - name: Auto Update pre-commit
-        id: auto_update_pre_commit
+      - name: Update pre-commit
+        id: update_pre_commit
         run: |
           pre-commit autoupdate --freeze
 
-      - name: DEBUG
-        id: debug
+      - name: Check for changes
+        id: check_changes
         run: |
-          git diff .pre-commit-config.yaml
+          if ! git diff --exit-code .pre-commit-config.yaml; then
+            echo "Changes detected in pre-commit configuration"
+            echo "changed=true" >>"${GITHUB_ENV}"
+          else
+            echo "No changes detected"
+            echo "changed=false" >>"${GITHUB_ENV}"
+          fi
