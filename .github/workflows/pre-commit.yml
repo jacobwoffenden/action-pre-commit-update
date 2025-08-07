@@ -88,7 +88,7 @@ jobs:
           BRANCH_NAME: ${{ env.branchName }}
         run: |
           gh pr create \
-            --title "🤖 pre-commit version update"
-            --body "This pull request updates the pre-commit configuration to the latest available versions."
+            --title "🤖 pre-commit version update" \
+            --body "This pull request updates the pre-commit configuration to the latest available versions." \
             --head "${BRANCH_NAME}" \
             --base "main"
