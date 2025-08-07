@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -10,12 +10,12 @@ repos:
       - id: check-added-large-files
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.28.0
+    rev: 39fdb480a06768cc41a84ef86959c07ff33091c4  # frozen: v8.28.0
     hooks:
       - id: gitleaks
 
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: v1.11.0
+    rev: ea492445acc5ef6033ed21fae41a49a2a3b4421a  # frozen: v1.10.0
     hooks:
       - id: zizmor
 

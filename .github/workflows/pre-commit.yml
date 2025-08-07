@@ -36,7 +36,12 @@ jobs:
         run: |
           uv sync --locked --dev
 
-      - name: Test pre-commit install
-        id: test_pre_commit_install
+      - name: Auto Update pre-commit
+        id: auto_update_pre_commit
         run: |
-          pre-commit --version
+          pre-commit autoupdate --freeze
+
+      - name: DEBUG
+        id: debug
+        run: |
+          git diff .pre-commit-config.yaml
