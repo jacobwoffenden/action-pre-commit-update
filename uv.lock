@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.13"
 
 [[package]]
@@ -16,18 +16,18 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "boto", specifier = "==2.48.0" }]
+requires-dist = [{ name = "boto", specifier = "==2.49.0" }]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pre-commit", specifier = "==4.1.0" }]
 
 [[package]]
 name = "boto"
-version = "2.48.0"
+version = "2.49.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/66/e7/fe1db6a5ed53831b53b8a6695a8f134a58833cadb5f2740802bc3730ac15/boto-2.48.0.tar.gz", hash = "sha256:deb8925b734b109679e3de65856018996338758f4b916ff4fe7bb62b6d7000d1", size = 1461372, upload-time = "2017-07-06T16:41:23.742Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c8/af/54a920ff4255664f5d238b5aebd8eedf7a07c7a5e71e27afcfe840b82f51/boto-2.49.0.tar.gz", hash = "sha256:ea0d3b40a2d852767be77ca343b58a9e3a4b00d9db440efb8da74b4e58025e5a", size = 1478498, upload-time = "2018-07-11T20:58:58.057Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bd/b7/a88a67002b1185ed9a8e8a6ef15266728c2361fcb4f1d02ea331e4c7741d/boto-2.48.0-py2.py3-none-any.whl", hash = "sha256:13be844158d1bd80a94c972c806ec8381b9ea72035aa06123c5db6bc6a6f3ead", size = 1352965, upload-time = "2017-07-06T16:41:39.821Z" },
+    { url = "https://files.pythonhosted.org/packages/23/10/c0b78c27298029e4454a472a1919bde20cb182dab1662cec7f2ca1dcc523/boto-2.49.0-py2.py3-none-any.whl", hash = "sha256:147758d41ae7240dc989f0039f27da8ca0d53734be0eb869ef16e3adcfa462e8", size = 1359202, upload-time = "2018-07-11T20:58:55.711Z" },
 ]
 
 [[package]]
