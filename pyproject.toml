@@ -1,0 +1,14 @@
+[project]
+name = "action-pre-commit-update"
+version = "0.0.1"
+description = "pre-commit update action"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "boto==2.48.0"
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit==4.1.0"
+]
