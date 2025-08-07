@@ -53,32 +53,32 @@ jobs:
             echo "changed=false" >>"${GITHUB_ENV}"
           fi
 
-      # - name: Create branch
-      #   id: create_branch
-      #   if: env.changed == 'true'
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     branchName="pre-commit-update-$(date +%Y%m%d%H%M%S)"
-      #     export branchName
-      #     echo "branchName=${branchName}" >>"${GITHUB_ENV}"
+      - name: Create branch
+        id: create_branch
+        if: env.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branchName="pre-commit-update-$(date +%Y%m%d%H%M%S)"
+          export branchName
+          echo "branchName=${branchName}" >>"${GITHUB_ENV}"
 
-      #     gh api \
-      #       --method POST /repos/${{ github.repository }}/git/refs \
-      #       --raw-field ref="refs/heads/${branchName}" \
-      #       --raw-field sha=$(git rev-parse HEAD)
+          gh api \
+            --method POST /repos/${{ github.repository }}/git/refs \
+            --raw-field ref="refs/heads/${branchName}" \
+            --raw-field sha=$(git rev-parse HEAD)
 
-      # - name: Commit changes
-      #   if: env.changed == 'true'
-      #   id: commit_changes
-      #   uses: planetscale/ghcommit-action@322be9669498a4be9ce66efc1169f8f43f6bd883 # v0.2.17
-      #   with:
-      #     commit_message: "🤖 Update .pre-commit-config.yaml"
-      #     file_pattern: ".pre-commit-config.yaml"
-      #     repo: ${{ github.repository }}
-      #     branch: ${{ env.branchName }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit changes
+        if: env.changed == 'true'
+        id: commit_changes
+        uses: planetscale/ghcommit-action@322be9669498a4be9ce66efc1169f8f43f6bd883 # v0.2.17
+        with:
+          commit_message: "🤖 Update .pre-commit-config.yaml"
+          file_pattern: ".pre-commit-config.yaml"
+          repo: ${{ github.repository }}
+          branch: ${{ env.branchName }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Find previous pull request
         id: find_previous_pr
@@ -96,23 +96,24 @@ jobs:
             echo "previousPullRequest=${previousPullRequest}" >>"${GITHUB_ENV}"
           fi
 
-      # - name: Create pull request
-      #   if: env.changed == 'true'
-      #   id: create_pull_request
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     BRANCH_NAME: ${{ env.branchName }}
-      #   run: |
-      #     gh pr create \
-      #       --title "🤖 pre-commit version update" \
-      #       --body "This pull request updates the pre-commit configuration to the latest available versions." \
-      #       --head "${BRANCH_NAME}" \
-      #       --base "main"
+      - name: Create pull request
+        if: env.changed == 'true'
+        id: create_pull_request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_NAME: ${{ env.branchName }}
+        run: |
+          gh pr create \
+            --title "🤖 pre-commit version update" \
+            --body "This pull request updates the pre-commit configuration to the latest available versions." \
+            --head "${BRANCH_NAME}" \
+            --base "main"
 
       - name: Close previous pull request
         if: env.changed == 'true' && env.previousPullRequest != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PREVIOUS_PULL_REQUEST: ${{ env.previousPullRequest }}
+          NEW_PULL_REQUEST: ${{ steps.create_pull_request.outputs.stdout }}
         run: |
-          gh pr close "${PREVIOUS_PULL_REQUEST}" --delete-branch
+          gh pr close "${PREVIOUS_PULL_REQUEST}" --comment "Superseded by ${NEW_PULL_REQUEST}" --delete-branch
