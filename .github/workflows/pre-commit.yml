@@ -11,7 +11,8 @@ jobs:
     name: pre-commit
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
     steps:
       - name: Harden Runner
         id: harden_runner
@@ -51,3 +52,30 @@ jobs:
             echo "No changes detected"
             echo "changed=false" >>"${GITHUB_ENV}"
           fi
+
+      - name: Create branch
+        id: create_branch
+        if: env.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branchName="chore/pre-commit-update-$(date +%Y%m%d%H%M%S)"
+          export branchName
+          echo "branchName=${branchName}" >>"${GITHUB_ENV}"
+
+          gh api \
+            --method POST /repos/${{ github.repository }}/git/refs \
+            --raw-field ref="${branchName}" \
+            --raw-field sha=$(git rev-parse HEAD)
+
+      - name: Commit changes
+        if: env.changed == 'true'
+        id: commit_changes
+        uses: planetscale/ghcommit-action@322be9669498a4be9ce66efc1169f8f43f6bd883 # v0.2.17
+        with:
+          commit_message: "🤖 Update .pre-commit-config.yaml"
+          file_pattern: ".pre-commit-config.yaml"
+          repo: ${{ github.repository }}
+          branch: ${{ env.branchName }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
