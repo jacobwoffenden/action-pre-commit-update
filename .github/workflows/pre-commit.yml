@@ -79,3 +79,16 @@ jobs:
           branch: ${{ env.branchName }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create pull request
+        if: env.changed == 'true'
+        id: create_pull_request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_NAME: ${{ env.branchName }}
+        run:
+          gh pr create \
+            --title "🤖 pre-commit configuration update"
+            --body "This PR updates the pre-commit configuration to the latest version."
+            --head "${BRANCH_NAME}" \
+            --base "main"
